@@ -2,42 +2,35 @@ package main
 
 import (
 	"fmt"
-	"html/template"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/z-wentao/TimeTracking/controllers"
+	"github.com/z-wentao/TimeTracking/views"
 )
-
-func ParseAndExecute(w http.ResponseWriter, filepath string) {
-	tpl, err := template.ParseFiles(filepath)
-	if err != nil {
-		panic(err)
-	}
-	err = tpl.Execute(w, nil)
-	if err != nil {
-		panic(err)
-	}
-}
-
-func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	ParseAndExecute(w, "templates/home.gohtml")
-}
-
-func LogHandler(w http.ResponseWriter, r *http.Request) {
-	ParseAndExecute(w, "templates/log.gohtml")
-}
-
-func ReflectionHandler(w http.ResponseWriter, r *http.Request) {
-	ParseAndExecute(w, "templates/reflection.gohtml")
-}
 
 type Router struct{}
 
 func main() {
 	r := chi.NewRouter()
-	r.Get("/", HomeHandler)
-	r.Get("/log", LogHandler)
-	r.Get("/reflection", ReflectionHandler)
+	tpl, err := views.Parse("templates/home.gohtml")
+	if err != nil {
+		panic(err)
+	}
+	r.Get("/", controllers.StaticHandler(tpl))
+
+	tpl, err = views.Parse("templates/log.gohtml")
+	if err != nil {
+		panic(err)
+	}
+	r.Get("/log", controllers.StaticHandler(tpl))
+
+	tpl, err = views.Parse("templates/reflection.gohtml")
+	if err != nil {
+		panic(err)
+	}
+	r.Get("/reflection", controllers.StaticHandler(tpl))
+
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "oh, we cannot found this page", http.StatusNotFound)
 	})
