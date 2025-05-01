@@ -30,3 +30,10 @@ func (t Template) Execute(w http.ResponseWriter, data any) {
 		return
 	}
 }
+
+func Must(t Template, err error) Template {
+	if err != nil {
+		panic(err)
+	}
+	return t
+}

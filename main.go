@@ -13,22 +13,13 @@ type Router struct{}
 
 func main() {
 	r := chi.NewRouter()
-	tpl, err := views.Parse("templates/home.gohtml")
-	if err != nil {
-		panic(err)
-	}
+	tpl := views.Must(views.Parse("templates/home.gohtml"))
 	r.Get("/", controllers.StaticHandler(tpl))
 
-	tpl, err = views.Parse("templates/log.gohtml")
-	if err != nil {
-		panic(err)
-	}
+	tpl = views.Must(views.Parse("templates/log.gohtml"))
 	r.Get("/log", controllers.StaticHandler(tpl))
 
-	tpl, err = views.Parse("templates/reflection.gohtml")
-	if err != nil {
-		panic(err)
-	}
+	tpl = views.Must(views.Parse("templates/reflection.gohtml"))
 	r.Get("/reflection", controllers.StaticHandler(tpl))
 
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
