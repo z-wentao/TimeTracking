@@ -8,8 +8,8 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	tpl, err := template.ParseFiles("templates/home.gohtml")
+func ParseAndExecute(w http.ResponseWriter, filepath string) {
+	tpl, err := template.ParseFiles(filepath)
 	if err != nil {
 		panic(err)
 	}
@@ -17,36 +17,18 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func HomeHandler(w http.ResponseWriter, r *http.Request) {
+	ParseAndExecute(w, "templates/home.gohtml")
 }
 
 func LogHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "<h1>April 30 Time Log</h1>")
-	fmt.Fprintf(w, "8.00AM Morning Routine<br>")
-	fmt.Fprintf(w, "9.00AM Interleaving\n")
-
-	tpl, err := template.ParseFiles("templates/log.gohtml")
-	if err != nil {
-		panic(err)
-	}
-	err = tpl.Execute(w, nil)
-	if err != nil {
-		panic(err)
-	}
+	ParseAndExecute(w, "templates/log.gohtml")
 }
 
 func ReflectionHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "<h1>Self-Reflection based on daily Log</h1>")
-	w.Header().Set("Content-Type", "text/hmtl; charset=utf-8")
-	fmt.Fprintf(w, "It works well")
-
-	tpl, err := template.ParseFiles("templates/reflection.gohtml")
-	if err != nil {
-		panic(err)
-	}
-	err = tpl.Execute(w, nil)
-	if err != nil {
-		panic(err)
-	}
+	ParseAndExecute(w, "templates/reflection.gohtml")
 }
 
 type Router struct{}
