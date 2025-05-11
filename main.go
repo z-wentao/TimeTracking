@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/z-wentao/TimeTracking/controllers"
+	"github.com/z-wentao/TimeTracking/templates"
 	"github.com/z-wentao/TimeTracking/views"
 )
 
@@ -13,14 +14,14 @@ type Router struct{}
 
 func main() {
 	r := chi.NewRouter()
-	tpl := views.Must(views.Parse("templates/home.gohtml"))
-	r.Get("/", controllers.StaticHandler(tpl))
+	r.Get("/", controllers.StaticHandler(
+		views.Must(views.ParseFS(templates.FS, "home.gohtml"))))
 
-	tpl = views.Must(views.Parse("templates/log.gohtml"))
-	r.Get("/log", controllers.StaticHandler(tpl))
+	r.Get("/log", controllers.StaticHandler(
+		views.Must(views.ParseFS(templates.FS, "log.gohtml"))))
 
-	tpl = views.Must(views.Parse("templates/reflection.gohtml"))
-	r.Get("/reflection", controllers.StaticHandler(tpl))
+	r.Get("/reflection", controllers.StaticHandler(
+		views.Must(views.ParseFS(templates.FS, "reflection.gohtml"))))
 
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "oh, we cannot found this page", http.StatusNotFound)
